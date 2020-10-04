@@ -92,7 +92,7 @@ class EditTopic extends Component {
             <Button
                 onPress={this.onSubmit}
                 disabled={isLoading}
-                title= {isLoading ? 'Loading...' : "Save"}/>
+                title= {isLoading ? 'Loading...' : "Save Change"}/>
           </View>
         </ScrollView>
       </View>

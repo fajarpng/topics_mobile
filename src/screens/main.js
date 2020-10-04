@@ -48,15 +48,15 @@ class Main extends Component {
       {result.length > 0 ?
         <FlatList
           data={result}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <TouchableOpacity
               onPress={() => this.props.navigation.navigate('detail',{data: item.id})}>
               <Item
-                data ={item}
+                data = { item }
               />
             </TouchableOpacity>
           )}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={ item => item.id.toString() }
           />
         :
         <Text style={styles.notFound}>No Topic Found </Text>

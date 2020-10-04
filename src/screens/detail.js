@@ -59,9 +59,8 @@ class Main extends Component {
   render() {
     const { result } = this.props.topic.detail
     const { name, id } = this.props.auth
-    const { comment } = this.props.comment
+    const { comment, isLoading } = this.props.comment
 
-    console.log(result[0].user_id)
     return (
       <ScrollView>
       <View style={styles.parent}>
@@ -96,22 +95,38 @@ class Main extends Component {
               </TouchableOpacity>
             </View>}
 
-          <Text  style={styles.content}>{result[0].content}</Text>
+          <Text style={styles.content}>{result[0].content}</Text>
           </>
           :
           <Text style={styles.notFound}>No Topic Found </Text>
         }
-        <View style={styles.addComment}>
-          <Text style={styles.title}>Comment</Text>
+
+        <View style={styles.answerDiv}>
+          <Text style={styles.answer}>Answer</Text>
+        </View>
+
+        <FlatList
+            style={styles.listWrapper} 
+            data={comment}
+            renderItem={({item}) => (
+              <Item
+                data = { item }
+              />
+            )}
+            numColumns={3}
+            keyExtractor={item => item.id.toString()}
+            refreshing={isLoading}/>
+        <View style={styles.wraper}>
+          <Text style={styles.title}>Your answer</Text>
           <TextInput
             style={styles.input}
-            placeholder='Type your comment here ...'
+            placeholder='Type your answer here ...'
             multiline
             numberOfLines={5}
             onChangeText={(e) => this.setState({about: e})}/>
           <Button
             disabled={false}
-            title= {false ? 'Loading...' : "Post your comment"}/>
+            title= {false ? 'Loading...' : "Post your answer"}/>
         </View>
       </View>
       </ScrollView>
@@ -122,10 +137,14 @@ class Main extends Component {
 // class Item topic List
 class Item extends Component {
   render (){
-    // const { title, date, name, content, avatar } = this.props.data
+    const { comment, name } = this.props.data
+
     return (
       <>
-      
+        <View style={styles.wraper}>
+          <Text style={{fontWeight: 'bold', marginBottom: 10}}>{name}</Text>
+          <Text>{comment}</Text>
+        </View>
       </>
     )
   }
@@ -151,6 +170,15 @@ const styles = StyleSheet.create({
     borderBottomColor: '#9a9a9a',
     padding: 10,
     flexDirection: 'row',
+  },
+  answerDiv: {
+    backgroundColor: '#d3d3d3',
+    marginTop: 20,
+    padding: 10,
+  },
+  answer: {
+    fontSize: 18,
+    fontWeight: 'bold'
   },
   title: {
     fontSize: 18,
@@ -190,9 +218,7 @@ const styles = StyleSheet.create({
   btn: {
     marginRight: 20,
   },
-  addComment: {
-    borderWidth: 1,
-    borderColor: '#9a9a9a',
+  wraper: {
     margin: 5,
     borderRadius: 5,
     backgroundColor: '#fff',
@@ -205,7 +231,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     padding: 10
-  }
+  },
 });
 
 const mapStateToProps = state => ({
