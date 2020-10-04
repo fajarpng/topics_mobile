@@ -66,7 +66,9 @@ class Login extends Component {
           </View>
           <View style={styles.linkWraper}>
             <Text >Don t have an account? </Text>
-            <Text >Sign up</Text>
+            <Text
+              style={{color:'#08f'}}
+              onPress={() => this.props.navigation.navigate('register')}>Sign up</Text>
           </View>
         </View>
       </ScrollView>
@@ -80,7 +82,6 @@ const deviceWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: deviceHeight,
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',

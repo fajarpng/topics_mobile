@@ -35,7 +35,7 @@ class Register extends Component {
     if (email && password && name) {
       this.props.regis(this.state);
     } else {
-      ToastAndroid.show('Email & Password must filled', ToastAndroid.SHORT);
+      ToastAndroid.show('All form must filled', ToastAndroid.SHORT);
     }
   }
 
@@ -74,7 +74,9 @@ class Register extends Component {
           </View>
           <View style={styles.linkWraper}>
             <Text >Alredy have an account? </Text>
-            <Text >Log in</Text>
+            <Text
+              style={{color: '#08f'}}
+              onPress={() => this.props.navigation.navigate('login')}>Log in</Text>
           </View>
         </View>
       </ScrollView>
@@ -88,7 +90,6 @@ const deviceWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: deviceHeight,
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',

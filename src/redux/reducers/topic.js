@@ -1,20 +1,15 @@
 const initialState = {
-    isLogedin: false,
     isLoading: false,
-    id: '',
-    name: '',
-    about: '',
-    email: '',
-    avatar: '',
-    token: '',
+    data: {},
+    detail: [],
     errMsg: '',
     isError: false,
   }
   
-  const auth = (state=initialState, action) => {
+  const topic = (state=initialState, action) => {
     switch(action.type){
-      // LOGIN reducer
-      case 'LOGIN_PENDING': {
+      // GETTOPIC reducer
+      case 'GETTOPIC_PENDING': {
         return {
           ...state,
           isLoading: true,
@@ -22,7 +17,7 @@ const initialState = {
           errMsg: '',
         };
       }
-      case 'LOGIN_REJECTED': {
+      case 'GETTOPIC_REJECTED': {
         return {
           ...state,
           isLoading: false,
@@ -30,21 +25,14 @@ const initialState = {
           errMsg: 'Something wrong, try again',
         };
       }
-      case 'LOGIN_FULFILLED': {
+      case 'GETTOPIC_FULFILLED': {
         const { success, message, result } = action.payload.data;
-        const { id, name, email, about, avatar, token} = result
         if (success) {
           return {
             ...state,
             isLoading: false,
             isError: false,
-            id,
-            token,
-            name,
-            email,
-            avatar,
-            about,
-            errMsg: message,
+            data: result,
             isLogedin: true
           }
         } else {
@@ -56,8 +44,8 @@ const initialState = {
           }
         }
       }
-      // REGIS reducer
-      case 'REGIS_PENDING': {
+      // GETTOPIC reducer
+      case 'DEAIL_PENDING': {
         return {
           ...state,
           isLoading: true,
@@ -65,7 +53,7 @@ const initialState = {
           errMsg: '',
         };
       }
-      case 'REGIS_REJECTED': {
+      case 'DEAIL_REJECTED': {
         return {
           ...state,
           isLoading: false,
@@ -73,7 +61,43 @@ const initialState = {
           errMsg: 'Something wrong, try again',
         };
       }
-      case 'REGIS_FULFILLED': {
+      case 'DEAIL_FULFILLED': {
+        const { success, message, result } = action.payload.data;
+        if (success) {
+          return {
+            ...state,
+            isLoading: false,
+            isError: false,
+            detail: result,
+            isLogedin: true
+          }
+        } else {
+          return {
+            ...state,
+            isLoading: false,
+            isError: true,
+            errMsg: message || 'Something wrong, try again',
+          }
+        }
+      }
+      // ASK reducer
+      case 'ASK_PENDING': {
+        return {
+          ...state,
+          isLoading: true,
+          isError: false,
+          errMsg: '',
+        };
+      }
+      case 'ASK_REJECTED': {
+        return {
+          ...state,
+          isLoading: false,
+          isError: true,
+          errMsg: 'Something wrong, try again',
+        };
+      }
+      case 'ASK_FULFILLED': {
         const { success, message } = action.payload.data;
         if (success) {
           return {
@@ -81,44 +105,6 @@ const initialState = {
             isLoading: false,
             isError: false,
             errMsg: message,
-          }
-        } else {
-          return {
-            ...state,
-            isLoading: false,
-            isError: true,
-            errMsg: message || 'Something wrong, try again',
-          }
-        }
-      }
-      // UPDATE reducer
-      case 'UPDATE_PENDING': {
-        return {
-          ...state,
-          isLoading: true,
-          isError: false,
-          errMsg: '',
-        };
-      }
-      case 'UPDATE_REJECTED': {
-        return {
-          ...state,
-          isLoading: false,
-          isError: true,
-          errMsg: 'Something wrong, try again',
-        };
-      }
-      case 'UPDATE_FULFILLED': {
-        const { success, message, result } = action.payload.data;
-        const { name, about } = result
-        if (success) {
-          return {
-            ...state,
-            isLoading: false,
-            isError: false,
-            name,
-            about,
-            errMsg: message,
             isLogedin: true
           }
         } else {
@@ -130,19 +116,40 @@ const initialState = {
           }
         }
       }
-      case 'LOGOUT': {
+      // DELETE reducer
+      case 'DELETE_PENDING': {
         return {
           ...state,
-          isLogedin: false,
-          isLoading: false,
-          id: '',
-          name: '',
-          about: '',
-          email: '',
-          avatar: '',
-          token: '',
-          errMsg: '',
+          isLoading: true,
           isError: false,
+          errMsg: '',
+        };
+      }
+      case 'DELETE_REJECTED': {
+        return {
+          ...state,
+          isLoading: false,
+          isError: true,
+          errMsg: 'Something wrong, try again',
+        };
+      }
+      case 'DELETE_FULFILLED': {
+        const { success, message } = action.payload.data;
+        if (success) {
+          return {
+            ...state,
+            isLoading: false,
+            isError: false,
+            errMsg: message,
+            isLogedin: true
+          }
+        } else {
+          return {
+            ...state,
+            isLoading: false,
+            isError: true,
+            errMsg: message || 'Something wrong, try again',
+          }
         }
       }
       case 'CLEAR': {
@@ -161,4 +168,4 @@ const initialState = {
     }
   }
   
-  export default auth
+  export default topic

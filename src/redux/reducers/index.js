@@ -5,6 +5,8 @@ import hardSet from 'redux-persist/lib/stateReconciler/hardSet';
 
 // Import Reducer
 import auth from './auth'
+import topic from './topic'
+import comment from './comment'
 
 const persistConfig = {
   key: 'root',
@@ -14,6 +16,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth,
+  topic,
+  comment,
 })
 
 export default persistReducer(persistConfig, rootReducer);
