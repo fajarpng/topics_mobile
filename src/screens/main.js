@@ -56,7 +56,7 @@ class Main extends Component {
               />
             </TouchableOpacity>
           )}
-          keyExtractor={item => item.id}
+          keyExtractor={item => item.id.toString()}
           />
         :
         <Text style={styles.notFound}>No Topic Found </Text>

@@ -24,7 +24,6 @@ import { detailTopic, deleteTopic, fetchTopic } from '../redux/actions/topic';
 
 // default photo profile
 import image from '../assets/default.png';
-import Logo from '../assets/Topics.png';
 
 class Main extends Component {
 
@@ -59,9 +58,10 @@ class Main extends Component {
 
   render() {
     const { result } = this.props.topic.detail
-    const { name } = this.props.auth
+    const { name, id } = this.props.auth
     const { comment } = this.props.comment
 
+    console.log(result[0].user_id)
     return (
       <ScrollView>
       <View style={styles.parent}>
@@ -81,16 +81,21 @@ class Main extends Component {
               <Text style={styles.name}>{result[0].name}</Text>
             </View>
           </View>
-          <View style={styles.edit}>
-            <TouchableOpacity
-              style={styles.btn}
-              onPress={this.removeTopic}>
-              <Icon name='trash' size={20} color='#9a9a9a'/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
-              <Icon name='pen' size={20} color='#9a9a9a'/>
-            </TouchableOpacity>
-          </View>
+
+          {result[0].user_id === id && 
+            <View style={styles.edit}>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={this.removeTopic}>
+                <Icon name='trash' size={20} color='#9a9a9a'/>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => this.props.navigation.navigate('editTopic',{data: result[0]})}>
+                <Icon name='pen' size={20} color='#9a9a9a'/>
+              </TouchableOpacity>
+            </View>}
+
           <Text  style={styles.content}>{result[0].content}</Text>
           </>
           :

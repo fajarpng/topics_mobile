@@ -18,25 +18,25 @@ const url = 'http://192.168.0.103:3300/';
 // Imports: Redux Actions
 import { connect } from 'react-redux';
 import { clear } from '../../redux/actions/auth';
-import { ask, fetchTopic } from '../../redux/actions/topic';
+import { detailTopic, editTopic } from '../../redux/actions/topic';
 
-class Ask extends Component {
+class EditTopic extends Component {
   constructor(props){
     super(props)
-    const { id } = this.props.auth
+    const { data } = this.props.route.params;
     this.state = {
-      title: '',
-      content: '',
-      user_id: id
+      title: data.title,
+      content: data.content
     };
   }
 
-  onAsk = () =>{
+  onSubmit = () =>{
     const { token } = this.props.auth;
     const { title, content } = this.state;
+    const { data } = this.props.route.params;
 
     if (title && content){
-      this.props.ask(this.state, token);
+      this.props.editTopic(this.state, token, data.id);
     } else {
       ToastAndroid.show('All form must filled', ToastAndroid.SHORT);
     }
@@ -48,11 +48,13 @@ class Ask extends Component {
 
   componentDidUpdate(){
     const { errMsg, isError } = this.props.topic;
+    const { data } = this.props.route.params;
+
     if(errMsg !== ''){
       isError ? (
         ToastAndroid.show(errMsg, ToastAndroid.SHORT)
         ):(
-        this.props.fetchTopic(),
+        this.props.detailTopic(data.id),
         ToastAndroid.show(errMsg, ToastAndroid.SHORT)
         )
       this.props.clear();
@@ -62,6 +64,7 @@ class Ask extends Component {
   render() {
     const { content, title } = this.state
     const { errMsg, isLoading, isError } = this.props.topic
+    const { data } = this.props.route.params;
     
     return (
       <View style={styles.parent}>
@@ -87,7 +90,7 @@ class Ask extends Component {
               numberOfLines={6}
               onChangeText={(e) => this.setState({content: e})}/>
             <Button
-                onPress={this.onAsk}
+                onPress={this.onSubmit}
                 disabled={isLoading}
                 title= {isLoading ? 'Loading...' : "Save"}/>
           </View>
@@ -135,7 +138,7 @@ const mapStateToProps = state => ({
   topic: state.topic,
 });
 
-const mapDispatchToProps = { clear, ask, fetchTopic };
+const mapDispatchToProps = { clear, editTopic, detailTopic };
 
 // Exports
-export default connect(mapStateToProps, mapDispatchToProps)(Ask);
+export default connect(mapStateToProps, mapDispatchToProps)(EditTopic);

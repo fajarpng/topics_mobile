@@ -30,12 +30,21 @@ export const ask = (body, token) => {
   };
 };
 
-// delete topic
-export const deleteTopic = (token, id) => {
+// Edit topic
+export const editTopic = (body, token, id) => {
   const url = `topics/${id}`;
   const config = { headers: {
           'Authorization': 'Bearer '.concat(token)
         }}
+  return {
+    type: 'ASK',
+    payload: patch({url, body, config}),
+  };
+};
+
+// delete topic
+export const deleteTopic = (token, id) => {
+  const url = `topics/${id}`;
   return {
     type: 'DELETE',
     payload: remove({url}),

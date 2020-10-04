@@ -17,6 +17,7 @@ import Detail from '../screens/detail';
 import Profile from '../screens/profile';
 import Setting from '../screens/setting';
 import Ask from '../screens/topic/addTopic';
+import EditAsk from '../screens/topic/editTopic';
 
 class Route extends Component {
   render() {
@@ -98,6 +99,27 @@ class Route extends Component {
 				        }}
 		        		component={Detail}
 		        		name={'detail'}/>
+		        	<Stack.Screen
+		        		options={{
+				          headerStyle: {
+				            backgroundColor: '#222426',
+				            elevation: 0,
+				          },
+				          headerTitle: (
+				          	<>
+				          	<Image
+				          		style={{
+				          			width: 30,
+    								height: 30
+				          		}}
+				          		source={Logo}/>
+				          	<Text>Topics</Text>
+				          	</>
+				          ),
+				          headerTintColor: '#fff',
+				        }}
+		        		component={EditAsk}
+		        		name={'editTopic'}/>
 		        	<Stack.Screen
 		        		options={{
 				          headerStyle: {

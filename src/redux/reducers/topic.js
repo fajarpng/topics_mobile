@@ -44,8 +44,8 @@ const initialState = {
           }
         }
       }
-      // GETTOPIC reducer
-      case 'DEAIL_PENDING': {
+      // Get topic by id reducer
+      case 'DETAIL_PENDING': {
         return {
           ...state,
           isLoading: true,
