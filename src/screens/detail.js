@@ -21,36 +21,76 @@ const url = 'http://192.168.0.103:3300/';
 import { connect } from 'react-redux';
 import { clear } from '../redux/actions/auth';
 import { detailTopic, deleteTopic, fetchTopic } from '../redux/actions/topic';
+import { fetchComment, removeComment, addComment } from '../redux/actions/comment';
 
 // default photo profile
 import image from '../assets/default.png';
 
-class Main extends Component {
+class Detail extends Component {
+  constructor(props){
+    super(props)
+    const { data } = this.props.route.params;
+    const { id } = this.props.auth
+    this.state = {
+      topik_id: data,
+      comment: '',
+      user_id: id,
+    };
+  }
 
   componentDidMount(){
     const { data } = this.props.route.params;
 
     this.props.detailTopic(data)
+    this.props.fetchComment(data)
   }
 
   removeTopic = () => {
     const { data } = this.props.route.params;
-    const { token } = this.props.auth;
 
-    this.props.deleteTopic(token, data)
+    this.props.deleteTopic(data)
+  }
+
+  removeComment = () => {
+    const { comment } = this.props.comment;
+    
+    this.props.removeComment(comment[0].id)
+  }
+
+  addComment = () => {
+    const { comment } = this.state;
+
+    if(comment){
+      this.props.addComment(this.state);
+    } else {
+      ToastAndroid.show('Form can not empty', ToastAndroid.SHORT)
+    }
   }
 
   componentDidUpdate(){
     const { errMsg, isError } = this.props.topic;
+    const { msg, isErr } = this.props.comment;
     const { data } = this.props.route.params;
 
-    if(errMsg !== ''){
+    if (errMsg !== '') {
       isError ? (
         ToastAndroid.show(errMsg, ToastAndroid.SHORT)
         ):(
         this.props.fetchTopic(),
         this.props.detailTopic(data),
+        this.props.fetchComment(data),
         ToastAndroid.show(errMsg, ToastAndroid.SHORT)
+        )
+      this.props.clear();
+    } else if (msg !== '') {
+      isErr ? (
+        ToastAndroid.show(msg, ToastAndroid.SHORT)
+        ):(
+        this.props.fetchTopic(),
+        this.props.detailTopic(data),
+        this.props.fetchComment(data),
+        this.setState({comment: ''}),
+        ToastAndroid.show(msg, ToastAndroid.SHORT)
         )
       this.props.clear();
     }
@@ -67,7 +107,7 @@ class Main extends Component {
         {result.length > 0 ?
           <>
           <View style={styles.body}>
-            {result[0].avatar ? 
+            {result[0].avatar ?
                 <View style={styles.avatar}>
                   <Image style={styles.img} source={{uri: `${url}${result[0].avatar}`}}/>
                 </View>
@@ -106,27 +146,43 @@ class Main extends Component {
         </View>
 
         <FlatList
-            style={styles.listWrapper} 
             data={comment}
             renderItem={({item}) => (
-              <Item
-                data = { item }
-              />
+              <View style={styles.wraper}>
+                {comment[0].user_id === id && 
+                  <View style={styles.edit}>
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={this.removeComment}>
+                      <Icon name='trash' size={15} color='#9a9a9a'/>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.btn}
+                      onPress={() => this.props.navigation.navigate('editComment',{data: comment[0]})}>
+                      <Icon name='pen' size={15} color='#9a9a9a'/>
+                    </TouchableOpacity>
+                  </View>}
+                <Item
+                  data = { item }
+                />
+              </View>
             )}
-            numColumns={3}
             keyExtractor={item => item.id.toString()}
             refreshing={isLoading}/>
+
         <View style={styles.wraper}>
           <Text style={styles.title}>Your answer</Text>
           <TextInput
             style={styles.input}
             placeholder='Type your answer here ...'
             multiline
+            value={this.state.comment}
             numberOfLines={5}
-            onChangeText={(e) => this.setState({about: e})}/>
+            onChangeText={(e) => this.setState({comment: e})}/>
           <Button
-            disabled={false}
-            title= {false ? 'Loading...' : "Post your answer"}/>
+            onPress={this.addComment}
+            disabled={isLoading}
+            title= {isLoading ? 'Loading...' : "Post your answer"}/>
         </View>
       </View>
       </ScrollView>
@@ -141,10 +197,8 @@ class Item extends Component {
 
     return (
       <>
-        <View style={styles.wraper}>
-          <Text style={{fontWeight: 'bold', marginBottom: 10}}>{name}</Text>
-          <Text>{comment}</Text>
-        </View>
+        <Text style={styles.commentName}>{name}</Text>
+        <Text>{comment}</Text>
       </>
     )
   }
@@ -212,6 +266,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#9a9a9a',
     paddingTop: 10,
     paddingBottom: 10,
+    marginBottom: 10,
     flexDirection: 'row',
     justifyContent: 'flex-end'
   },
@@ -232,6 +287,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10
   },
+  commentName: {
+    fontWeight: 'bold',
+    marginBottom: 10,
+    fontSize: 16,
+  }
 });
 
 const mapStateToProps = state => ({
@@ -240,6 +300,14 @@ const mapStateToProps = state => ({
   comment: state.comment,
 });
 
-const mapDispatchToProps = { detailTopic, deleteTopic, clear, fetchTopic };
+const mapDispatchToProps = { 
+  detailTopic,
+  deleteTopic,
+  clear,
+  fetchTopic,
+  fetchComment,
+  removeComment,
+  addComment };
+
 // Exports
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Detail);

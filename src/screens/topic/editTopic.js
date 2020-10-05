@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   header: {
-    margin: 30,
+    margin: 10,
     borderRadius: 5,
     backgroundColor: '#fff',
     elevation: 5,

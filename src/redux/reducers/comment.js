@@ -1,8 +1,8 @@
 const initialState = {
     isLoading: false,
     comment: [],
-    errMsg: '',
-    isError: false,
+    msg: '',
+    isErr: false,
   }
   
   const topic = (state=initialState, action) => {
@@ -12,16 +12,16 @@ const initialState = {
         return {
           ...state,
           isLoading: true,
-          isError: false,
-          errMsg: '',
+          isErr: false,
+          msg: '',
         };
       }
       case 'GET_REJECTED': {
         return {
           ...state,
           isLoading: false,
-          isError: true,
-          errMsg: 'Something wrong, try again',
+          isErr: true,
+          msg: 'Something wrong, try again',
         };
       }
       case 'GET_FULFILLED': {
@@ -30,17 +30,52 @@ const initialState = {
           return {
             ...state,
             isLoading: false,
-            isError: false,
-            data: result,
-            errMsg: message,
+            isErr: false,
+            comment: result,
             isLogedin: true
           }
         } else {
           return {
             ...state,
             isLoading: false,
-            isError: true,
-            errMsg: message || 'Something wrong, try again',
+            isErr: true,
+            msg: message || 'Something wrong, try again',
+          }
+        }
+      }
+      // EDIT reducer
+      case 'EDIT_PENDING': {
+        return {
+          ...state,
+          isLoading: true,
+          isErr: false,
+          msg: '',
+        };
+      }
+      case 'EDIT_REJECTED': {
+        return {
+          ...state,
+          isLoading: false,
+          isErr: true,
+          msg: 'Something wrong, try again',
+        };
+      }
+      case 'EDIT_FULFILLED': {
+        const { success, message } = action.payload.data;
+        if (success) {
+          return {
+            ...state,
+            isLoading: false,
+            isErr: false,
+            msg: message,
+            isLogedin: true
+          }
+        } else {
+          return {
+            ...state,
+            isLoading: false,
+            isErr: true,
+            msg: message || 'SSomething wrong, try again',
           }
         }
       }
@@ -48,8 +83,8 @@ const initialState = {
         return {
           ...state,
           isLoading: false,
-          errMsg: '',
-          isError: false
+          msg: '',
+          isErr: false
         }
       }
       default: {
